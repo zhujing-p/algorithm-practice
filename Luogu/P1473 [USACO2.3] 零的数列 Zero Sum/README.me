@@ -149,3 +149,97 @@ void dfs(int k)//递归的目的：建立了一个存储符号的数组，每递
             //所以如果多个空格连在一起的话，不用单开一个存储空间，把当前的数取出来修改后再放回去，是当前数，当前数可能是上一个已经被修改过的数，继续修改
         }
 
+
+
+#修改问题
+##str_1.push_back(str_g[i]);
+            //因为每一次进入Calculator str_1都是直接用push back把当前字符添加到最后一个元素的下一个位置所以每一次进入Calculator str_1的元素数量会越来越多所以str_1必须每一次进入啊这一组数据都必须先把符号清空
+        }
+
+
+##if(k==n-1)//第n-2层dfs的时候，继续填符号，把符号填到str_g[n-2]，然后进入下一次递归调用,第n-1次dfs递归调用，str_g[n-1]不存在，所以return上一层，换个符号
+
+
+
+
+#include<iostream>
+#include<vector>
+//忘写命名空间
+using namespace std;
+int n;
+vector<char> str_g;
+vector<char> str_1;
+vector<int> nums;//未定义n的值，还不能赋值0
+vector<int> nums_1;
+//计算
+void calculate()//计算是否为0，把符号传进去
+{
+
+    //进来就调用clear函数清空str_1内所有元素
+    str_1.clear();
+    nums_1[0]=nums[1];   
+    int j=0;
+    for(int i=0;i<n-1;i++)
+    {
+        if(str_g[i]==' ')//把当前数取出来修改
+        {
+            nums_1[j]=nums_1[j]*10+nums[i+2];
+        }
+        else
+        {
+            j++;
+            nums_1[j]=nums[i+2];
+             str_1.push_back(str_g[i]);
+        }
+    }
+     int sum=nums_1[0];
+    for(int i=0;i<str_1.size();i++)
+    {
+        if(str_1[i]=='+')
+            sum+=nums_1[i+1];
+        if(str_1[i]=='-')
+            sum-=nums_1[i+1];
+    }
+    if(sum==0)
+    {
+        cout<<nums_1[0];
+        for(int i=0;i<str_1.size();i++)
+        {
+            cout<<str_1[i]<<nums_1[i+1];//新数字与新符号数组的关系也是n,n-1
+        }
+        cout<<endl;
+    }
+}
+void dfs(int k)//递归的目的：建立了一个存储符号的数组，每递归一次就存储一个符号
+{
+    if(k==n-1)
+    {
+        //如果已经填满符号了，先计算，不管是否为0都要返回上一层dfs试下一个符号
+        calculate();
+        return;
+    }
+        
+    str_g[k]='+';//给第k个位置存储+号
+    dfs(k+1);//
+    str_g[k]='-';
+    dfs(k+1);
+    str_g[k]=' ';
+    //空格后再加一个递归，才能形成三个符号的闭环
+    dfs(k+1);
+}
+
+int main()
+{
+    cin>>n;
+    //用revize增加元素数量
+    nums.resize(n+1);
+    nums_1.resize(n);
+    str_g.resize(n-1);
+for(int i=1;i<=n;i++)
+{
+    cin>>nums[i];
+}
+    dfs(0);
+    return 0;
+}
+
